@@ -113,15 +113,22 @@ function App() {
       <div className="flex flex-col lg:flex-row gap-4 items-start">
         <div className="relative border-4 border-gray-600 rounded-md shadow-lg">
           <canvas ref={canvasRef} />
-          {selfPlayer && selfPlayer.Status === 'playing' && (
-            <div
-              className="player-blinker"
-              style={{
-                left: selfPlayer.Position.X * 16,
-                top: selfPlayer.Position.Y * 16,
-              }}
-            />
-          )}
+          {gameState?.Players && Object.values(gameState.Players).map(player => {
+            if (player.Status !== 'playing') {
+              return null;
+            }
+            const blinkerClass = player.ID === selfID ? 'player-blinker' : 'other-player-blinker';
+            return (
+              <div
+                key={player.ID}
+                className={blinkerClass}
+                style={{
+                  left: player.Position.X * 16,
+                  top: player.Position.Y * 16,
+                }}
+              />
+            );
+          })}
         </div>
         <div className="flex flex-col gap-4 w-full lg:w-96">
           <div className="ui-panel">

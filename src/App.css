@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+
+@layer components {
+  .ui-panel {
+    @apply bg-gray-800 p-4 rounded-md shadow-lg border-2 border-gray-700;
+  }
+  
+  .panel-title {
+    @apply text-xl font-bold mb-2 border-b border-gray-600 pb-2 text-cyan-300;
+  }
+}
+
+.targeting-text {
+  @apply text-red-400 font-bold animate-pulse;
+}
+
+.shadow-text {
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+
+.player-blinker {
+  @apply absolute w-4 h-4 rounded-full pointer-events-none;
+  background-color: rgba(255, 215, 0, 0.8); /* golden, semi-transparent */
+  animation: pulse-gold 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse-gold {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.other-player-blinker {
+  @apply absolute w-4 h-4 rounded-full pointer-events-none;
+  background-color: rgba(0, 150, 255, 0.8); /* blue, semi-transparent */
+  animation: pulse-blue 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse-blue {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}

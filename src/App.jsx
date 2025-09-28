@@ -1,0 +1,175 @@
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { renderGame } from './renderer.jsx';
+import { useGamepad } from './controlerLogic/useGamepad.jsx';
+import './App.css';
+
+function LegendItem({ name, spriteCoords, spritesheet }) {
+  const canvasRef = useRef(null);
+  const TILE_SIZE = 16;
+
+  useEffect(() => {
+    if (canvasRef.current && spritesheet) {
+      const ctx = canvasRef.current.getContext('2d');
+      ctx.clearRect(0, 0, TILE_SIZE, TILE_SIZE);
+      const [spriteX, spriteY] = spriteCoords;
+      ctx.drawImage(
+        spritesheet,
+        spriteX, spriteY, TILE_SIZE, TILE_SIZE,
+        0, 0, TILE_SIZE, TILE_SIZE
+      );
+    }
+  }, [spritesheet, spriteCoords]);
+
+  return (
+    <div className="flex items-center gap-x-3">
+      <canvas ref={canvasRef} width={TILE_SIZE} height={TILE_SIZE} className="bg-gray-700 rounded-sm"></canvas>
+      <span className="text-sm">{name}</span>
+    </div>
+  );
+}
+
+function App() {
+  const [gameState, setGameState] = useState(null);
+  const [selfID, setSelfID] = useState(null);
+  const [spritesheet, setSpritesheet] = useState(null);
+  const canvasRef = useRef(null);
+  const socket = useRef(null);
+
+  useEffect(() => {
+    const image = new Image();
+    image.src = '/spritesheet.png';
+    image.onload = () => setSpritesheet(image);
+  }, []);
+
+  useEffect(() => {
+    if (!spritesheet) return;
+    if (socket.current) return;
+    socket.current = new WebSocket('ws://localhost:8080/ws');
+    socket.current.onopen = () => console.log('Connected to game server.');
+    socket.current.onmessage = (event) => {
+      const msg = JSON.parse(event.data);
+      if (msg.type === "welcome") setSelfID(msg.id);
+      if (msg.type === "state") setGameState(msg.data);
+    };
+    socket.current.onclose = () => {
+      console.log('Server connection lost.');
+      setGameState(null);
+    };
+    return () => { if (socket.current) socket.current.close(); };
+  }, [spritesheet]);
+
+  useEffect(() => {
+    if (gameState && canvasRef.current && spritesheet) {
+      renderGame(canvasRef.current, spritesheet, gameState, selfID);
+    }
+  }, [gameState, selfID, spritesheet]);
+
+  const sendCommand = useCallback((command) => {
+    if (socket.current) {
+      socket.current.send(command);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      let command = "";
+      switch (e.key) {
+        case 'w': case 'ArrowUp': command = 'w'; break;
+        case 'a': case 'ArrowLeft': command = 'a'; break;
+        case 's': case 'ArrowDown': command = 's'; break;
+        case 'd': case 'ArrowRight': command = 'd'; break;
+        case 'g': command = 'g'; break;
+        case 'f': command = 'f'; break;
+        case 'D': command = 'D'; break;
+        case 'Escape': command = 'quit_or_cancel'; break;
+      }
+      if (command) {
+        e.preventDefault();
+        sendCommand(command);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [sendCommand]);
+
+  useGamepad(sendCommand);
+
+  const selfPlayer = gameState && selfID ? gameState.Players[selfID] : null;
+
+  const legendItems = [
+    { name: 'You', spriteCoords: [512, 0] },
+    { name: 'Other Player', spriteCoords: [528, 0] },
+    { name: 'Goblin', spriteCoords: [480, 48] },
+    { name: 'Ogre', spriteCoords: [480, 96] },
+    { name: 'Skeleton', spriteCoords: [384, 16] },
+    { name: 'Sword', spriteCoords: [576, 128] },
+    { name: 'Bow', spriteCoords: [640, 96] },
+    { name: 'Exit', spriteCoords: [688, 192] },
+    { name: 'Fountain', spriteCoords: [672, 160] },
+  ];
+
+  return (
+    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-gray-200 p-4 font-mono">
+      <div className="flex flex-col lg:flex-row gap-4 items-start">
+        <div className="relative border-4 border-gray-600 rounded-md shadow-lg">
+          <canvas ref={canvasRef} />
+          {selfPlayer && selfPlayer.Status === 'playing' && (
+            <div
+              className="player-blinker"
+              style={{
+                left: selfPlayer.Position.X * 16,
+                top: selfPlayer.Position.Y * 16,
+              }}
+            />
+          )}
+        </div>
+        <div className="flex flex-col gap-4 w-full lg:w-96">
+          <div className="ui-panel">
+            <h2 className="panel-title">Status</h2>
+            {selfPlayer ? (
+              <div className="space-y-1 text-lg">
+                <p>HP: <span className="font-bold text-green-400">{selfPlayer.HP} / {selfPlayer.MaxHP}</span></p>
+                <p>Weapon: <span className="font-bold text-yellow-400">{selfPlayer.EquippedWeapon ? selfPlayer.EquippedWeapon.Name : 'Fists'}</span></p>
+                {selfPlayer.Status === 'targeting' && <p className="targeting-text">AIMING...</p>}
+                {selfPlayer.Status === 'defeated' && <p className="text-red-500 font-bold">DEFEATED</p>}
+              </div>
+            ) : <p className="text-gray-400">Loading...</p>}
+          </div>
+          <div className="ui-panel">
+            <h2 className="panel-title">Players</h2>
+            <div className="space-y-2">
+              {gameState?.Players && Object.values(gameState.Players).map(p => (
+                <div key={p.ID} className={`p-2 rounded ${p.ID === selfID ? 'bg-purple-900/50' : ''}`}>
+                  <p className="font-bold text-sm">{p.ID === selfID ? 'You' : `Player ${p.ID.substring(0, 4)}`}
+                    <span className={`ml-2 ${p.Status === 'defeated' ? 'text-gray-500' : 'text-green-400'}`}>
+                      ({p.HP > 0 ? p.HP : 0} HP)
+                    </span>
+                  </p>
+                  <div className="w-full bg-gray-700 rounded-full h-2.5 mt-1">
+                    <div className="bg-green-600 h-2.5 rounded-full" style={{ width: `${(p.HP / p.MaxHP) * 100}%` }}></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="ui-panel">
+            <h2 className="panel-title">Legend</h2>
+            <div className="space-y-2">
+              {legendItems.map(item => (
+                <LegendItem key={item.name} {...item} spritesheet={spritesheet} />
+              ))}
+            </div>
+          </div>
+          <div className="ui-panel">
+             <h2 className="panel-title">Log</h2>
+            <div className="h-8 flex items-center text-sm text-gray-400 italic">
+                <span>{gameState?.Log?.[0] || '...'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export default App;

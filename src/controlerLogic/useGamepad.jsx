@@ -25,15 +25,15 @@ export function useGamepad(callback) {
       }
       lastCommand.current = moveCommand;
 
-      // Button 0 ('A' on Xbox, 'X' on PS) for Get/Interact
       if (buttons[0] && buttons[0].pressed && !lastButtonState.current[0]) {
         callback('g');
       }
-      // Button 2 ('X' on Xbox, 'Square' on PS) for Fire
+      if (buttons[1] && buttons[1].pressed && !lastButtonState.current[1]) {
+        callback('e');
+      }
       if (buttons[2] && buttons[2].pressed && !lastButtonState.current[2]) {
         callback('f');
       }
-      // Button 3 ('Y' on Xbox, 'Triangle' on PS) for Drop
       if (buttons[3] && buttons[3].pressed && !lastButtonState.current[3]) {
         callback('D');
       }
@@ -58,4 +58,3 @@ export function useGamepad(callback) {
     };
   }, [callback]);
 }
-

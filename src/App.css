@@ -1,6 +1,4 @@
 @import "tailwindcss";
-
-
 @layer components {
   .ui-panel {
     @apply bg-gray-800 p-4 rounded-md shadow-lg border-2 border-gray-700;
@@ -10,7 +8,15 @@
     @apply text-xl font-bold mb-2 border-b border-gray-600 pb-2 text-cyan-300;
   }
 }
-
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
 .targeting-text {
   @apply text-red-400 font-bold animate-pulse;
 }
@@ -19,25 +25,35 @@
   text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
-
 .player-blinker {
   @apply absolute w-4 h-4 rounded-full pointer-events-none;
-  background-color: rgba(255, 215, 0, 0.8); /* golden, semi-transparent */
-  animation: pulse-gold 1.2s ease-in-out infinite;
-}
-
-@keyframes pulse-gold {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+  background-color: rgba(255, 215, 0, 0.7); /* Golden color */
+  /* Use the new, more dynamic pulse animation */
+  animation: strong-pulse 1.3s ease-in-out infinite;
 }
 
 .other-player-blinker {
   @apply absolute w-4 h-4 rounded-full pointer-events-none;
-  background-color: rgba(0, 150, 255, 0.8); /* blue, semi-transparent */
-  animation: pulse-blue 1.2s ease-in-out infinite;
+  background-color: rgba(0, 200, 255, 0.7); /* Blue color */
+  /* Both blinkers use the same animation effect */
+  animation: strong-pulse 1.3s ease-in-out infinite;
 }
 
-@keyframes pulse-blue {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+/* This is the new, more powerful pulse animation */
+@keyframes strong-pulse {
+  0% {
+    transform: scale(1.0);
+    opacity: 0.5;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.8;
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.1);
+  }
+  100% {
+    transform: scale(1.0);
+    opacity: 0.5;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
 }

@@ -78,6 +78,7 @@ function App() {
         case 'a': case 'ArrowLeft': command = 'a'; break;
         case 's': case 'ArrowDown': command = 's'; break;
         case 'd': case 'ArrowRight': command = 'd'; break;
+        case 'e': command = 'e'; break;
         case 'g': command = 'g'; break;
         case 'f': command = 'f'; break;
         case 'D': command = 'D'; break;
@@ -144,7 +145,7 @@ function App() {
           </div>
           <div className="ui-panel">
             <h2 className="panel-title">Inventory (e to cycle)</h2>
-            <div className="h-12 overflow-y-auto scrollbar-hide text-sm space-y-1">
+            <div className="h-16 overflow-y-auto scrollbar-hide text-sm space-y-1">
               {selfPlayer && selfPlayer.Inventory.length > 0 ? (
                 selfPlayer.Inventory.map((item, index) => (
                   <p key={index} className={item === selfPlayer.EquippedWeapon || item === selfPlayer.EquippedArmor ? 'text-yellow-300' : ''}>- {item.Name}</p>

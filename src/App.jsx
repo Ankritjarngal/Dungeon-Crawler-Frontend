@@ -98,7 +98,7 @@ function App() {
 
   const legendItems = [
     { name: 'You', spriteCoords: [512, 0] },
-    { name: 'Other Player', spriteCoords: [528, 0] },
+    { name: 'Other Players', spriteCoords: [528, 0] },
     { name: 'Goblin', spriteCoords: [480, 48] },
     { name: 'Ogre', spriteCoords: [480, 96] },
     { name: 'Skeleton', spriteCoords: [384, 16] },

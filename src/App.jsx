@@ -101,7 +101,7 @@ function App() {
     { name: 'Other Players', spriteCoords: [528, 0] },
     { name: 'Goblin', spriteCoords: [480, 48] },
     { name: 'Ogre', spriteCoords: [480, 96] },
-    { name: 'Skeleton', spriteCoords: [384, 16] },
+    { name: 'Skeleton Archer', spriteCoords: [384, 16] },
     { name: 'Sword', spriteCoords: [576, 128] },
     { name: 'Bow', spriteCoords: [640, 96] },
     { name: 'Exit', spriteCoords: [688, 192] },

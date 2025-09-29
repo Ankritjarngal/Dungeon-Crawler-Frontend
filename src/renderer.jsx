@@ -39,12 +39,6 @@ export function renderGame(canvas, spritesheet, gameState, selfID) {
     if (gameState.VisibleTiles) {
         gameState.VisibleTiles.forEach(p => visibleSet.add(`${p.X},${p.Y}`));
     }
-    
-    const trailSet = new Set();
-    if (gameState.PlayerTrails) {
-        const selfPlayerTrail = gameState.PlayerTrails[selfID] || [];
-        selfPlayerTrail.forEach(p => trailSet.add(`${p.X},${p.Y}`));
-    }
 
     const drawSprite = (spriteName, x, y) => {
         const spriteCoords = SPRITE_MAP[spriteName];
@@ -57,46 +51,48 @@ export function renderGame(canvas, spritesheet, gameState, selfID) {
         );
     };
 
-    // --- The New Rendering Loop ---
+    // --- The Corrected Rendering Loop ---
+
+    // Layer 1: Draw the full, bright dungeon terrain AND fountains
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const floorVariantIndex = (x + y) % floorVariants.length;
+            drawSprite(floorVariants[floorVariantIndex], x, y);
+
+            const tileType = gameState.Dungeon[y][x];
+            if (tileType === 0) { // Wall
+                const wallVariantIndex = (x + y) % wallVariants.length;
+                drawSprite(wallVariants[wallVariantIndex], x, y);
+            }
+            // THE FIX: We draw health fountains here with the base terrain.
+            if (tileType === 3) drawSprite('health', x, y);
+        }
+    }
+
+    // Layer 2: Draw the "darkness" overlay on tiles OUTSIDE the vision radius
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
             const coordStr = `${x},${y}`;
-            const isVisible = visibleSet.has(coordStr);
-            const isTrail = trailSet.has(coordStr);
-
-            if (isVisible) {
-                // TIER 1: Currently Visible -> Draw everything
-                const floorVariantIndex = (x + y) % floorVariants.length;
-                drawSprite(floorVariants[floorVariantIndex], x, y);
-                const tileType = gameState.Dungeon[y][x];
-                if (tileType === 0) {
-                    const wallVariantIndex = (x + y) % wallVariants.length;
-                    drawSprite(wallVariants[wallVariantIndex], x, y);
-                }
-                if (tileType === 2) drawSprite('exit', x, y);
-                if (tileType === 3) drawSprite('health', x, y);
-            } else if (isTrail) {
-                // TIER 2: Breadcrumb Trail -> Draw only a faint floor tile
-                const floorVariantIndex = (x + y) % floorVariants.length;
-                ctx.globalAlpha = 0.2;
-                drawSprite(floorVariants[floorVariantIndex], x, y);
-                ctx.globalAlpha = 1.0;
-            } else {
-                // TIER 3: Unseen -> Draw the normal tiles, but with a dark overlay
-                const floorVariantIndex = (x + y) % floorVariants.length;
-                drawSprite(floorVariants[floorVariantIndex], x, y);
-                const tileType = gameState.Dungeon[y][x];
-                if (tileType === 0) {
-                     const wallVariantIndex = (x + y) % wallVariants.length;
-                     drawSprite(wallVariants[wallVariantIndex], x, y);
-                }
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.75)'; // 75% dark overlay
+            if (!visibleSet.has(coordStr)) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
                 ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
         }
     }
     
-    // --- Render Entities (only if they are currently visible) ---
+    // Layer 3: Render special tiles (the Exit) and entities ONLY if they are visible
+    // This loop runs on top of the darkness overlay.
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const coordStr = `${x},${y}`;
+            if (visibleSet.has(coordStr)) {
+                // THE FIX: The exit is now only drawn if it's visible.
+                const tileType = gameState.Dungeon[y][x];
+                if (tileType === 2) drawSprite('exit', x, y);
+            }
+        }
+    }
+
     if (gameState.ItemsOnGround) {
         gameState.ItemsOnGround.forEach(item => {
             if (visibleSet.has(`${item.Position.X},${item.Position.Y}`)) {
@@ -111,6 +107,7 @@ export function renderGame(canvas, spritesheet, gameState, selfID) {
                 let spriteName = 'goblin';
                 if (monster.Template.Name === 'Ogre') spriteName = 'ogre';
                 if (monster.Template.Name === 'Skeleton Archer') spriteName = 'skeleton';
+                if (monster.Template.Name === 'Bat') spriteName = 'bat';
                 drawSprite(spriteName, monster.Position.X, monster.Position.Y);
             }
         });
@@ -132,8 +129,8 @@ export function renderGame(canvas, spritesheet, gameState, selfID) {
             }
         });
     }
-    
-    // Finally, draw the LOS beam on top of everything
+
+    // Layer 4: Draw the Red Beam on top of everything
     if (gameState.HighlightedTiles && gameState.HighlightedTiles.length > 0) {
         const path = gameState.HighlightedTiles;
         ctx.strokeStyle = 'rgba(255, 50, 50, 0.6)';

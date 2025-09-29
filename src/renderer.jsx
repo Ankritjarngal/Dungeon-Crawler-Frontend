@@ -20,6 +20,7 @@ const SPRITE_MAP = {
     skeleton: [24 * TILE_SIZE, 1 * TILE_SIZE],  
     darkness_1: [0 * TILE_SIZE, 0 * TILE_SIZE],
     darkness_2: [1 * TILE_SIZE, 1 * TILE_SIZE],
+    bat :[26*TILE_SIZE,8*TILE_SIZE],
 };
 
 const floorVariants = ['floor_1', 'floor_2', 'floor_3'];

@@ -44,7 +44,12 @@ function App() {
   useEffect(() => {
     if (!spritesheet) return;
     if (socket.current) return;
-    socket.current = new WebSocket('ws://localhost:8080/ws');
+    const wsUrl =
+    import.meta.env.MODE === "development"
+      ? "ws://localhost:8080/ws"
+      : "wss://dungeon-crawler-2jyu.onrender.com/ws";
+
+  socket.current = new WebSocket(wsUrl);
     socket.current.onopen = () => console.log('Connected to game server.');
     socket.current.onmessage = (event) => {
       const msg = JSON.parse(event.data);

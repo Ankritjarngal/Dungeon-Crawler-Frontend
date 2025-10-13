@@ -6,13 +6,14 @@ function Lobby({ onCreateGame, onJoinGame, error, initialRoomCode }) {
 
   const handleInputChange = (e) => {
     const value = e.target.value.toUpperCase();
+
     if (/[^A-Z]/.test(value)) {
       setInputError("A harsh whisper echoes: Only letters A-Z are allowed.");
     } else {
       setInputError("");
-      setRoomCode(value);
     }
-    setRoomCode(value);
+
+    setRoomCode(value.replace(/[^A-Z]/g, ""));
   };
 
   return (
@@ -43,7 +44,7 @@ function Lobby({ onCreateGame, onJoinGame, error, initialRoomCode }) {
           <p className="mt-3 text-[#bca144]">State your intent, adventurer.</p>
         </div>
 
-        <div className="mb-8 flex items-end space-x-3">
+        <div className="mb-2 flex items-end space-x-3">
           <label htmlFor="roomCode" className="text-sm uppercase flex-shrink-0">
             Inscribe Dungeon Code:
           </label>

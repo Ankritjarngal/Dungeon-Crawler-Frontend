@@ -67,3 +67,52 @@
   line-height: 0.8; /* Tightens up the lines to prevent vertical gaps */
   font-size: 1em;   /* Adjust if needed, but 1em is a good start */
 }
+.shadow-glow {
+  box-shadow: 0 0 15px 5px rgba(212, 175, 55, 0.2), 0 0 5px 1px rgba(212, 175, 55, 0.3) inset;
+}
+.shadow-glow-cyan {
+  box-shadow: 0 0 15px 5px rgba(0, 229, 255, 0.2), 0 0 5px 1px rgba(0, 229, 255, 0.3) inset;
+}
+
+/* Glow effect for the Defeat Screen container */
+.shadow-glow-red {
+  box-shadow: 0 0 15px 5px rgba(179, 0, 27, 0.2), 0 0 5px 1px rgba(179, 0, 27, 0.3) inset;
+}
+
+/* Keyframes for the subtle neon text pulsing */
+@keyframes neon-pulse-cyan {
+  0%, 100% { text-shadow: 0 0 5px #00E5FF, 0 0 10px #00E5FF, 0 0 15px #00E5FF; opacity: 1; }
+  50% { text-shadow: 0 0 3px #00E5FF, 0 0 7px #00E5FF, 0 0 12px #00E5FF; opacity: 0.8; }
+}
+
+@keyframes neon-pulse-cyan-light {
+  0%, 100% { text-shadow: 0 0 2px #00A2B3; opacity: 1; }
+  50% { text-shadow: none; opacity: 0.7; }
+}
+
+@keyframes neon-pulse-red {
+  0%, 100% { text-shadow: 0 0 5px #B3001B, 0 0 10px #B3001B, 0 0 15px #B3001B; opacity: 1; }
+  50% { text-shadow: 0 0 3px #B3001B, 0 0 7px #B3001B, 0 0 12px #B3001B; opacity: 0.8; }
+}
+
+@keyframes neon-pulse-red-light {
+  0%, 100% { text-shadow: 0 0 2px #850014; opacity: 1; }
+  50% { text-shadow: none; opacity: 0.7; }
+}
+
+/* Animation utility classes to apply the keyframes */
+.animate-neon-pulse-cyan {
+  animation: neon-pulse-cyan 2s ease-in-out infinite alternate;
+}
+
+.animate-neon-pulse-cyan-light {
+  animation: neon-pulse-cyan-light 2.5s ease-in-out infinite alternate;
+}
+
+.animate-neon-pulse-red {
+  animation: neon-pulse-red 2s ease-in-out infinite alternate;
+}
+
+.animate-neon-pulse-red-light {
+  animation: neon-pulse-red-light 2.5s ease-in-out infinite alternate;
+}

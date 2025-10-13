@@ -44,7 +44,8 @@ function GameUI({ gameState, selfID, spritesheet }) {
       <div className="bg-[#2B2B33] border-2 border-[#4A4E57] rounded p-2">
         <h2 className="text-[10px] font-bold text-[#B68F40] mb-1.5 uppercase tracking-widest border-b border-[#4A4E57] pb-1">Inventory (E To Cycle Items)</h2>
         <div className="max-h-16 overflow-y-auto text-[10px] space-y-0.5 scrollbar-thin">
-          {selfPlayer && selfPlayer.Inventory.length > 0 ? (
+          {/* --- THIS IS THE FIX --- */}
+          {selfPlayer?.Inventory?.length > 0 ? (
             selfPlayer.Inventory.map((item, index) => (
               <p 
                 key={index} 
@@ -59,7 +60,7 @@ function GameUI({ gameState, selfID, spritesheet }) {
         </div>
       </div>
 
-      {/* Players Panel - Expandable */}
+
       <div className="bg-[#2B2B33] border-2 border-[#4A4E57] rounded p-2 flex-grow overflow-hidden flex flex-col">
         <h2 className="text-[10px] font-bold text-[#B68F40] mb-1.5 uppercase tracking-widest border-b border-[#4A4E57] pb-1">Players</h2>
         <div className="overflow-y-auto space-y-1.5 flex-grow scrollbar-thin">
@@ -87,7 +88,6 @@ function GameUI({ gameState, selfID, spritesheet }) {
         </div>
       </div>
 
-      {/* Legend Panel - Compact */}
       <div className="bg-[#2B2B33] border-2 border-[#4A4E57] rounded p-2">
         <h2 className="text-[10px] font-bold text-[#B68F40] mb-1.5 uppercase tracking-widest border-b border-[#4A4E57] pb-1">Legend</h2>
         <Legend spritesheet={spritesheet} />

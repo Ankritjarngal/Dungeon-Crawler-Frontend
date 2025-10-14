@@ -40,12 +40,12 @@ This client is designed to deliver a seamless and intuitive roguelike experience
 
 ## How to Run Locally
 
-To run the frontend client, ensure you have [Node.js](https://nodejs.org/) installed. The backend server must be running for the game to connect.
+The backend server must be running for the game to connect.
 
 ```bash
 # 1. Clone the repository
-git clone [https://github.com/Ankritjarngal/Dungeon-Crawler-Frontend](https://github.com/Ankritjarngal/Dungeon-Crawler-Frontend)
-cd [frontend-repository-name]
+git clone https://github.com/Ankritjarngal/Dungeon-Crawler-Frontend
+cd Dungeon-Crawler-Frontend
 
 # 2. Install dependencies
 npm install

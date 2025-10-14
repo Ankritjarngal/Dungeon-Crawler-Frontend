@@ -26,7 +26,7 @@ function App() {
   useEffect(() => {
     const audio = new Audio('/bg.mp3');
     audio.loop = true;
-    audio.volume = 0.4;
+    audio.volume = 0.3;
     audioRef.current = audio;
 
     const playAudio = () => {
@@ -174,15 +174,13 @@ function App() {
 
   return (
     <>
-      {/* --- TUTORIAL BUTTON (REDESIGNED WITH ICON) --- */}
       {!isTutorialOpen && (
         <button
           onClick={() => setIsTutorialOpen(true)}
-          title="How to Play" // Adds a helpful tooltip on hover
-          aria-label="Open tutorial" // For accessibility
-          className="fixed top-5 right-5 z-[60] flex h-12 w-12 items-center justify-center rounded-full border border-[#B8941F] bg-[#13110a] text-[#D4AF37] shadow-glow transition-all duration-200 hover:scale-110 hover:border-[#ffd700] hover:text-[#ffd700]"
+          title="How to Play" 
+          aria-label="Open tutorial" 
+          className="fixed top-2 right-2 z-[60] flex h-12 w-12 items-center justify-center rounded-full border border-[#B8941F] bg-[#13110a] text-[#D4AF37] shadow-glow transition-all duration-200 hover:scale-110 hover:border-[#ffd700] hover:text-[#ffd700]"
         >
-          {/* 2. Use the icon component */}
           <GiScrollQuill className="h-7 w-7" />
         </button>
       )}

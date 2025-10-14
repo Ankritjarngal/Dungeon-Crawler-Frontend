@@ -3,10 +3,11 @@ import Lobby from './components/Lobby';
 import GameView from './components/GameView';
 import VictoryScreen from './components/VictoryScreen';
 import DefeatScreen from './components/DefeatScreen';
+import Tutorial from './howtoplay/Tutorial.jsx';
 import useKeyboardControls from './hooks/useKeyboardControls';
-import { renderGame } from './renderer';
+import { renderGame } from './renderer.jsx';
 import './App.css';
-
+import { GiScrollQuill } from "react-icons/gi"; 
 function App() {
   const [view, setView] = useState('lobby');
   const [gameState, setGameState] = useState(null);
@@ -16,6 +17,7 @@ function App() {
   const [spritesheet, setSpritesheet] = useState(null);
   const [gameOverResult, setGameOverResult] = useState(null);
   const [createCode, setCreateCode] = useState('');
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
 
   const socket = useRef(null);
   const isConnectedRef = useRef(false);
@@ -52,18 +54,15 @@ function App() {
     }
   }, []);
 
-  useKeyboardControls(sendCommand, view === 'game' && !gameOverResult);
+  useKeyboardControls(sendCommand, view === 'game' && !gameOverResult && !isTutorialOpen);
 
   const connectAndJoin = (type, code) => {
     if (socket.current) socket.current.close();
 
-
     const socketURL =
-  process.env.NODE_ENV === "production"
-    ? "wss://artistic-gretal-ankritjarngal-9fa33e09.koyeb.app/ws"
-    : "ws://localhost:8080/ws";
-
-
+      process.env.NODE_ENV === "production"
+        ? "wss://artistic-gretal-ankritjarngal-9fa33e09.koyeb.app/ws"
+        : "ws://localhost:8080/ws";
 
     socket.current = new WebSocket(socketURL);
     isConnectedRef.current = false;
@@ -139,38 +138,59 @@ function App() {
     setCreateCode('');
   };
 
-  // --- Main Render Logic ---
-  if (gameOverResult) {
-    if (gameOverResult === 'victory') {
-      return <VictoryScreen roomCode={roomCode} onPlayAgain={handlePlayAgain} />;
-    } else {
-      return <DefeatScreen roomCode={roomCode} onPlayAgain={handlePlayAgain} />;
+  const renderCurrentView = () => {
+    if (gameOverResult) {
+      if (gameOverResult === 'victory') {
+        return <VictoryScreen roomCode={roomCode} onPlayAgain={handlePlayAgain} />;
+      } else {
+        return <DefeatScreen roomCode={roomCode} onPlayAgain={handlePlayAgain} />;
+      }
     }
-  }
 
-  if (view === 'lobby') {
+    if (view === 'lobby') {
+      return (
+        <Lobby
+          onCreateGame={handleCreateGame}
+          onJoinGame={handleJoinGame}
+          error={error}
+          initialRoomCode={roomCode}
+          onCodeChange={setRoomCode}
+          onCreateCodeChange={setCreateCode}
+          createCode={createCode}
+        />
+      );
+    }
+
     return (
-      <Lobby
-        onCreateGame={handleCreateGame}
-        onJoinGame={handleJoinGame}
-        error={error}
-        initialRoomCode={roomCode}
-        onCodeChange={setRoomCode}
-        onCreateCodeChange={setCreateCode}
-        createCode={createCode}
+      <GameView
+        gameState={gameState}
+        selfID={selfID}
+        roomCode={roomCode}
+        spritesheet={spritesheet}
+        renderGame={renderGame}
       />
     );
-  }
+  };
 
   return (
-    <GameView
-      gameState={gameState}
-      selfID={selfID}
-      roomCode={roomCode}
-      spritesheet={spritesheet}
-      renderGame={renderGame}
-    />
+    <>
+      {/* --- TUTORIAL BUTTON (REDESIGNED WITH ICON) --- */}
+      {!isTutorialOpen && (
+        <button
+          onClick={() => setIsTutorialOpen(true)}
+          title="How to Play" // Adds a helpful tooltip on hover
+          aria-label="Open tutorial" // For accessibility
+          className="fixed top-5 right-5 z-[60] flex h-12 w-12 items-center justify-center rounded-full border border-[#B8941F] bg-[#13110a] text-[#D4AF37] shadow-glow transition-all duration-200 hover:scale-110 hover:border-[#ffd700] hover:text-[#ffd700]"
+        >
+          {/* 2. Use the icon component */}
+          <GiScrollQuill className="h-7 w-7" />
+        </button>
+      )}
+
+      {isTutorialOpen && <Tutorial onClose={() => setIsTutorialOpen(false)} />}
+      
+      {renderCurrentView()}
+    </>
   );
 }
-
 export default App;

@@ -7,7 +7,7 @@ function Lobby({ onCreateGame, onJoinGame, error, initialRoomCode }) {
   const handleInputChange = (e) => {
     const value = e.target.value.toUpperCase();
     if (/[^A-Z]/.test(value)) {
-      setInputError("Only letters A-Z are permitted for the sigil.");
+      setInputError("A harsh whisper echoes : Only letters A-Z are permitted for the sigil.");
     } else {
       setInputError("");
     }
@@ -38,7 +38,7 @@ function Lobby({ onCreateGame, onJoinGame, error, initialRoomCode }) {
 `}
           </pre>
         </div>
-        <div className="border border-[#443711] p-4 mb-10 text-xs text-[#aa8e2f] italic bg-black/20">
+        <div className="border border-[#443711] p-4 mb-10 text-xs text-[#aa8e2f]  bg-black/20">
           <p>"The old pathways stir... Ancient stone groans, eager for torchlight."</p>
           <p>"New corridors carve themselves from the darkness, awaiting footsteps."</p>
           <p>"State your intent, adventurer."</p>

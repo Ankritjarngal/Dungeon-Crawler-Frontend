@@ -28,7 +28,7 @@ function DefeatScreen({ roomCode, onPlayAgain }) {
           </pre>
         </div>
 
-        <div className="border border-[#4F000C] p-4 mb-8 text-xs text-[#850014] italic bg-black/20">
+        <div className="border border-[#4F000C] p-4 mb-8 text-xs text-[#850014]  bg-black/20">
           <p>"The torch sputters... The darkness closes in."</p>
           <p>"Your expedition ends here, another tale swallowed by the stone."</p>
           <p>"The dungeon claims its due."</p>

@@ -33,7 +33,7 @@ function VictoryScreen({ roomCode, onPlayAgain }) {
         </div>
 
         {/* Thematic Message Box */}
-        <div className="border border-[#005F69] p-4 mb-8 text-xs text-[#00A2B3] italic bg-black/20">
+        <div className="border border-[#005F69] p-4 mb-8 text-xs text-[#00A2B3]  bg-black/20">
           <p>"The oppressive air lifts... A glimmer of daylight breaks the ancient gloom."</p>
           <p>"You emerge, bearing the scars and treasures of the deep."</p>
           <p>"Your legend is etched in the dungeon's stone."</p>

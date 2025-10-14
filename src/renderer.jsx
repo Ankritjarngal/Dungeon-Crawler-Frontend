@@ -19,6 +19,7 @@ const SPRITE_MAP = {
     ogre: [30 * TILE_SIZE, 6 * TILE_SIZE],
     skeleton: [24 * TILE_SIZE, 1 * TILE_SIZE],  
     bat: [26 * TILE_SIZE, 8 * TILE_SIZE],
+    guardian :[25*TILE_SIZE,8*TILE_SIZE]
 };
 
 const floorVariants = ['floor_1', 'floor_2', 'floor_3'];
@@ -88,6 +89,7 @@ export function renderGame(canvas, spritesheet, gameState, selfID) {
             if (monster.Template.Name === 'Ogre') spriteName = 'ogre';
             if (monster.Template.Name === 'Skeleton Archer') spriteName = 'skeleton';
             if (monster.Template.Name === 'Bat') spriteName = 'bat';
+            if(monster.Template.Name==='Guardian') spriteName='guardian'
             drawSprite(spriteName, monster.Position.X, monster.Position.Y);
         }
     });

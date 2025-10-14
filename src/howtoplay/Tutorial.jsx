@@ -36,8 +36,9 @@ const slides = [
   },
   {
     image: "/TutorialImages/End.png",
-    text: "Your ultimate objective is to find the exit stairs and descend deeper. Survive as a team. If one of you finds the way, all are victorious. But if all players fall, your souls will be lost to the dungeon forever. Good luck, adventurers."
+    text: "Your ultimate objective is to find the exit stairs and descend deeper. Beware — the strongest Guardian stands watch over the passage, testing all who dare to escape. Survive as a team. If one of you finds the way, all are victorious. But if all players fall, your souls will be lost to the dungeon forever. Good luck, adventurers."
   }
+  
 ];
 
 function Tutorial({ onClose }) {
@@ -73,7 +74,6 @@ function Tutorial({ onClose }) {
 
   return (
     <>
-      {/* Fullscreen Image Viewer Overlay */}
       {isImageFullscreen && (
         <div
           className="fixed inset-0 z-[100] flex cursor-zoom-out items-center justify-center bg-black/20 backdrop-blur-md"

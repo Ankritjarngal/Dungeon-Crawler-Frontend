@@ -9,6 +9,7 @@ const legendItems = [
   { name: 'Ogre', spriteCoords: [30 * 16, 6 * 16] },
   { name: 'Skeleton', spriteCoords: [24 * 16, 1 * 16] },
   { name: 'Bat', spriteCoords: [26 * 16, 8 * 16] },
+  {name :'Guardian', spriteCoords: [25 * 16, 8 * 16] },
   { name: 'Sword', spriteCoords: [36 * 16, 8 * 16] },
   { name: 'Bow', spriteCoords: [40 * 16, 6 * 16] },
   { name: 'Armor', spriteCoords: [32 * 16, 1 * 16] },

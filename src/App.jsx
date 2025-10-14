@@ -57,7 +57,14 @@ function App() {
   const connectAndJoin = (type, code) => {
     if (socket.current) socket.current.close();
 
-    const socketURL = import.meta.env.VITE_WEBSOCKET_URL || 'ws://localhost:8080/ws';
+
+    const socketURL =
+  process.env.NODE_ENV === "production"
+    ? "wss://artistic-gretal-ankritjarngal-9fa33e09.koyeb.app/ws"
+    : "ws://localhost:8080/ws";
+
+
+
     socket.current = new WebSocket(socketURL);
     isConnectedRef.current = false;
 

@@ -20,9 +20,9 @@ This client is designed to deliver a seamless and intuitive roguelike experience
 
 ### Tactical Turn-Based Action
 - **Intuitive Controls:** Simple keyboard commands (`WASD` for movement, `E` to equip, `G` to grab) make the game easy to pick up and play.
+- **Controller Support:** Seamless plug-and-play controller support allows for a classic gamepad experience.
 - **Visual Feedback:** A glowing indicator highlights your character, while a red targeting beam clearly shows the path of ranged attacks.
 - **Fog of War:** The map dynamically reveals itself as you explore, with the server calculating each player's unique line-of-sight.
-
 ---
 
 
@@ -44,7 +44,7 @@ To run the frontend client, ensure you have [Node.js](https://nodejs.org/) insta
 
 ```bash
 # 1. Clone the repository
-git clone [https://www.dronahq.com/top-github-repositories-for-front-end-developers/](https://www.dronahq.com/top-github-repositories-for-front-end-developers/)
+git clone [https://github.com/Ankritjarngal/Dungeon-Crawler-Frontend](https://github.com/Ankritjarngal/Dungeon-Crawler-Frontend)
 cd [frontend-repository-name]
 
 # 2. Install dependencies

@@ -60,7 +60,7 @@ function App() {
 
     const socketURL =
   process.env.NODE_ENV === "production"
-    ? "ws://artistic-gretal-ankritjarngal-9fa33e09.koyeb.app/ws"
+    ? "wss://artistic-gretal-ankritjarngal-9fa33e09.koyeb.app/ws"
     : "ws://localhost:8080/ws";
 
 

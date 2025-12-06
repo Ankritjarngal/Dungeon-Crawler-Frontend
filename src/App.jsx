@@ -7,7 +7,9 @@ import Tutorial from './howtoplay/Tutorial.jsx';
 import useKeyboardControls from './hooks/useKeyboardControls';
 import { renderGame } from './renderer.jsx';
 import './App.css';
-import { GiScrollQuill } from "react-icons/gi"; 
+import { GiScrollQuill } from "react-icons/gi";
+import { FaVolumeUp, FaVolumeMute } from "react-icons/fa"; // Added Mute icon for polish
+
 function App() {
   const [view, setView] = useState('lobby');
   const [gameState, setGameState] = useState(null);
@@ -18,6 +20,10 @@ function App() {
   const [gameOverResult, setGameOverResult] = useState(null);
   const [createCode, setCreateCode] = useState('');
   const [isTutorialOpen, setIsTutorialOpen] = useState(false);
+  
+  // Audio State
+  const [isAudioBarVisible, setIsAudioBarVisible] = useState(false);
+  const [volume, setVolume] = useState(0.3);
 
   const socket = useRef(null);
   const isConnectedRef = useRef(false);
@@ -26,7 +32,7 @@ function App() {
   useEffect(() => {
     const audio = new Audio('/bg.mp3');
     audio.loop = true;
-    audio.volume = 0.3;
+    audio.volume = volume;
     audioRef.current = audio;
 
     const playAudio = () => {
@@ -41,6 +47,12 @@ function App() {
       audio.currentTime = 0;
     };
   }, []);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
 
   useEffect(() => {
     const image = new Image();
@@ -174,12 +186,13 @@ function App() {
 
   return (
     <>
+      {/* Tutorial Button */}
       {!isTutorialOpen && (
         <button
           onClick={() => setIsTutorialOpen(true)}
           title="How to Play" 
           aria-label="Open tutorial" 
-          className="fixed top-2 right-2 z-[60] flex h-12 w-12 items-center justify-center rounded-full border border-[#B8941F] bg-[#13110a] text-[#D4AF37] shadow-glow transition-all duration-200 hover:scale-110 hover:border-[#ffd700] hover:text-[#ffd700]"
+          className="fixed top-3 right-3 z-[60] flex h-10 w-10 items-center justify-center rounded-full border border-[#B8941F] bg-[#13110a] text-[#D4AF37] shadow-glow transition-all duration-300 ease-in-out hover:scale-110 hover:border-[#ffd700] hover:text-[#ffd700]"
         >
           <GiScrollQuill className="h-7 w-7" />
         </button>
@@ -188,7 +201,47 @@ function App() {
       {isTutorialOpen && <Tutorial onClose={() => setIsTutorialOpen(false)} />}
       
       {renderCurrentView()}
+
+      {/* SMOOTH ANIMATED AUDIO BAR */}
+      <div
+        className={`fixed top-3 right-16 z-[60] flex items-center overflow-hidden rounded-full border bg-[#13110a] shadow-glow transition-all duration-500 ease-out ${
+          isAudioBarVisible 
+            ? "w-48 border-[#ffd700] pr-4" /* Expanded: Wide, brighter border */ 
+            : "w-10 border-[#B8941F]"      /* Collapsed: Circle, darker border */
+        }`}
+        style={{ height: "40px" }}
+        onMouseEnter={() => setIsAudioBarVisible(true)}
+        onMouseLeave={() => setIsAudioBarVisible(false)}
+      >
+        {/* Icon Section (Fixed Width) */}
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center text-[#D4AF37]">
+          {volume === 0 ? (
+             <FaVolumeMute className="h-5 w-5 opacity-70" />
+          ) : (
+             <FaVolumeUp className={`h-5 w-5 transition-colors duration-300 ${isAudioBarVisible ? 'text-[#ffd700]' : 'text-[#D4AF37]'}`} />
+          )}
+        </div>
+
+        {/* Slider Section (Animated Entrance) */}
+        <div 
+          className={`flex flex-grow items-center transition-all duration-500 ease-out ${
+            isAudioBarVisible ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"
+          }`}
+        >
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={(e) => setVolume(parseFloat(e.target.value))}
+            className="audio-slider w-full"
+            title={`Volume: ${Math.round(volume * 100)}%`}
+          />
+        </div>
+      </div>
     </>
   );
 }
+
 export default App;
